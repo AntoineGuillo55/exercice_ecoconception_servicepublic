@@ -44,8 +44,8 @@ jobs:
           data: '{"web_page": {"width": 1920, "height": 1080, "url": "https://service-public.antoineguillo.com/pages/inscription-electorale/etape-1.html"}, "custom_headers": {"Accept": "application/json"}}'
 
       # Délai d'attente pour laisser le temps à l'analyse de se faire
-      - name: Sleep for 10 minutes
-        run: sleep 600s
+      - name: Sleep for 5 minutes
+        run: sleep 300s
         shell: bash
 
       # Récupération des données de l'analyse avec l'id retournée à l'étape launchAnalysisHomepage
@@ -53,7 +53,7 @@ jobs:
         id: getAnalysisHomepage
         uses: fjogeleit/http-request-action@v1
         with:
-          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/${{steps.lauchAnalysisHomepage.outputs.response}}'
+          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/${{fromJson(steps.lauchAnalysisHomepage.outputs.response).id}}'
           method: 'GET'
 
       # Récupération des données de l'analyse avec l'id retournée à l'étape launchAnalysisUf1
@@ -61,7 +61,7 @@ jobs:
         id: getAnalysisUf1
         uses: fjogeleit/http-request-action@v1
         with:
-          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/${{steps.lauchAnalysisUf1.outputs.response}}'
+          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/${{fromJson(steps.lauchAnalysisUf1.outputs.response).id}}'
           method: 'GET'
 
       # Récupération des données de l'analyse avec l'id retournée à l'étape launchAnalysisHomepage
@@ -69,7 +69,7 @@ jobs:
         id: getAnalysisUf2
         uses: fjogeleit/http-request-action@v1
         with:
-          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/${{steps.lauchAnalysisUf2.outputs.response}}'
+          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/${{fromJson(steps.lauchAnalysisUf2.outputs.response).id}}'
           method: 'GET'
 
       # Récupération de la date courante pour nommage du fichier
