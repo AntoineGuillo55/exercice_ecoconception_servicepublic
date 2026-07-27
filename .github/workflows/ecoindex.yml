@@ -45,7 +45,7 @@ jobs:
 
       # Délai d'attente pour laisser le temps à l'analyse de se faire
       - name: Sleep for 180 seconds
-        run: sleep 120s
+        run: sleep 180s
         shell: bash
 
       # Récupération des données de l'analyse avec l'id retournée à l'étape launchAnalysisHomepage
