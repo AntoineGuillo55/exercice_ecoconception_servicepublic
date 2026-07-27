@@ -50,7 +50,7 @@ jobs:
       - name: Poll analysis homepage
         id: getAnalysisHomepage
         run: |
-          TASK_ID=$(echo '${{ steps.launchAnalysisHomepage.outputs.response }}' | jq -r '.id')
+          TASK_ID=$(echo '${{ steps.launchAnalysisHomepage.outputs.response }}' | jq -r)
           STATUS=""
           MAX_ATTEMPTS=30
           ATTEMPT=0
@@ -75,7 +75,7 @@ jobs:
       - name: Poll analysis uf1
         id: getAnalysisUf1
         run: |
-          TASK_ID=$(echo '${{ steps.launchAnalysisUf1.outputs.response }}' | jq -r '.id')
+          TASK_ID=$(echo '${{ steps.launchAnalysisUf1.outputs.response }}' | jq -r)
           STATUS=""
           MAX_ATTEMPTS=30
           ATTEMPT=0
@@ -100,7 +100,7 @@ jobs:
       - name: Poll analysis uf2
         id: getAnalysisUf2
         run: |
-          TASK_ID=$(echo '${{ steps.launchAnalysisUf2.outputs.response }}' | jq -r '.id')
+          TASK_ID=$(echo '${{ steps.launchAnalysisUf2.outputs.response }}' | jq -r)
           STATUS=""
           MAX_ATTEMPTS=30
           ATTEMPT=0
