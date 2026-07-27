@@ -25,6 +25,24 @@ jobs:
           method: 'POST'
           data: '{"web_page": {"width": 1920, "height": 1080, "url": "https://service-public.antoineguillo.com"}, "custom_headers": {"Accept": "application/json"}}'
 
+      # Lancement de l'anaylse ecoindex via l'API pour la page de l'uf1 (demande carte nationale identité)
+      - name: Launch analysis uf1
+        id: lauchAnalysisUf1
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/'
+          method: 'POST'
+          data: '{"web_page": {"width": 1920, "height": 1080, "url": "https://service-public.antoineguillo.com/pages/carte-identite/etape-1.html"}, "custom_headers": {"Accept": "application/json"}}'
+      
+       # Lancement de l'anaylse ecoindex via l'API pour la page de l'uf2 (inscription sur les listes électorales)
+      - name: Launch analysis uf2
+        id: lauchAnalysisUf2
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/'
+          method: 'POST'
+          data: '{"web_page": {"width": 1920, "height": 1080, "url": "https://service-public.antoineguillo.com/pages/inscription-electorale/etape-1.html"}, "custom_headers": {"Accept": "application/json"}}'
+
       # Délai d'attente pour laisser le temps à l'analyse de se faire
       - name: Sleep for 120 seconds
         run: sleep 120s
@@ -38,20 +56,6 @@ jobs:
           url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/${{fromJson(steps.lauchAnalysisHomepage.outputs.response)}}'
           method: 'GET'
 
-      # Lancement de l'anaylse ecoindex via l'API pour la page de l'uf1 (demande carte nationale identité)
-      - name: Launch analysis uf1
-        id: lauchAnalysisUf1
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/'
-          method: 'POST'
-          data: '{"web_page": {"width": 1920, "height": 1080, "url": "https://service-public.antoineguillo.com/pages/carte-identite/etape-1.html"}, "custom_headers": {"Accept": "application/json"}}'
-
-      # Délai d'attente pour laisser le temps à l'analyse de se faire
-      - name: Sleep for 120 seconds
-        run: sleep 120s
-        shell: bash
-
       # Récupération des données de l'analyse avec l'id retournée à l'étape launchAnalysisUf1
       - name: Get analysis result
         id: getAnalysisUf1
@@ -59,20 +63,6 @@ jobs:
         with:
           url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/${{fromJson(steps.lauchAnalysisUf1.outputs.response)}}'
           method: 'GET'
-
-      # Lancement de l'anaylse ecoindex via l'API pour la page de l'uf2 (inscription sur les listes électorales)
-      - name: Launch analysis uf2
-        id: lauchAnalysisUf2
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/'
-          method: 'POST'
-          data: '{"web_page": {"width": 1920, "height": 1080, "url": "https://service-public.antoineguillo.com/pages/inscription-electorale/etape-1.html"}, "custom_headers": {"Accept": "application/json"}}'
-
-      # Délai d'attente pour laisser le temps à l'analyse de se faire
-      - name: Sleep for 120 seconds
-        run: sleep 120s
-        shell: bash
 
       # Récupération des données de l'analyse avec l'id retournée à l'étape launchAnalysisHomepage
       - name: Get analysis result
