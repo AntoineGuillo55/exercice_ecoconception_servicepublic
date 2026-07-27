@@ -92,9 +92,9 @@ jobs:
         id: storeAnalysis
         uses: 1arp/create-a-file-action@0.4.6
         with:
-          path: 'ecoindex'
+          path: 'docs/ecoindex'
           isAbsolutePath: 'false'
-          file: ecoindex-analysis-${{steps.date.outputs.date}}.json
+          file: ecoindex-analysis-${{steps.date.outputs.date}}-${{github.sha}}.json
           content: |
             ${{ steps.getAnalysisHomepage.outputs.response }}
             ${{ steps.getAnalysisUf1.outputs.response }}
