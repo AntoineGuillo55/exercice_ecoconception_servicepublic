@@ -49,27 +49,27 @@ jobs:
         shell: bash
 
       # Récupération des données de l'analyse avec l'id retournée à l'étape launchAnalysisHomepage
-      - name: Get analysis result
-        id: getAnalysisHomempage
+      - name: Get analysis result homepage
+        id: getAnalysisHomepage
         uses: fjogeleit/http-request-action@v1
         with:
-          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/${{fromJson(steps.lauchAnalysisHomepage.outputs.response)}}'
+          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/${{steps.lauchAnalysisHomepage.outputs.response}}'
           method: 'GET'
 
       # Récupération des données de l'analyse avec l'id retournée à l'étape launchAnalysisUf1
-      - name: Get analysis result
+      - name: Get analysis result uf1
         id: getAnalysisUf1
         uses: fjogeleit/http-request-action@v1
         with:
-          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/${{fromJson(steps.lauchAnalysisUf1.outputs.response)}}'
+          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/${{steps.lauchAnalysisUf1.outputs.response}}'
           method: 'GET'
 
       # Récupération des données de l'analyse avec l'id retournée à l'étape launchAnalysisHomepage
-      - name: Get analysis result
+      - name: Get analysis result uf2
         id: getAnalysisUf2
         uses: fjogeleit/http-request-action@v1
         with:
-          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/${{fromJson(steps.lauchAnalysisUf2.outputs.response)}}'
+          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/${{steps.lauchAnalysisUf2.outputs.response}}'
           method: 'GET'
 
       # Récupération de la date courante pour nommage du fichier
