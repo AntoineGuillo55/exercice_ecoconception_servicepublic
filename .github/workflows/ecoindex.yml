@@ -56,7 +56,7 @@ jobs:
           ATTEMPT=0
           INTERVAL=10
 
-          while [ "$STATUS" != "completed" ] && [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+          while [ "$STATUS" != "SUCCESS" ] && [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
             sleep $INTERVAL
             RESPONSE=$(curl -s "https://api.ecoindex.fr/v1/tasks/ecoindexes/$TASK_ID")
             STATUS=$(echo "$RESPONSE" | jq -r '.status')
@@ -81,7 +81,7 @@ jobs:
           ATTEMPT=0
           INTERVAL=10
 
-          while [ "$STATUS" != "completed" ] && [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+          while [ "$STATUS" != "SUCCESS" ] && [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
             sleep $INTERVAL
             RESPONSE=$(curl -s "https://api.ecoindex.fr/v1/tasks/ecoindexes/$TASK_ID")
             STATUS=$(echo "$RESPONSE" | jq -r '.status')
@@ -106,7 +106,7 @@ jobs:
           ATTEMPT=0
           INTERVAL=10
 
-          while [ "$STATUS" != "completed" ] && [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+          while [ "$STATUS" != "SUCCESS" ] && [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
             sleep $INTERVAL
             RESPONSE=$(curl -s "https://api.ecoindex.fr/v1/tasks/ecoindexes/$TASK_ID")
             STATUS=$(echo "$RESPONSE" | jq -r '.status')
