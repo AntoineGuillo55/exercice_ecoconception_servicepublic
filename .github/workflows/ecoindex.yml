@@ -1,85 +1,133 @@
 name: ecoindex-check
 run-name: ${{github.actor}} is running ecoindex check
 on: [workflow_dispatch]
+
 jobs:
   launch-ecoindex-analysis:
     runs-on: ubuntu-latest
-
     permissions:
       contents: write
 
     steps:
-
-      # Chargement du contenu du repository
+      # Chargement du contenu du repository
       - uses: actions/checkout@v7
         with:
           ref: ${{ github.head_ref }}
           persist-credentials: true
 
-      # Lancement de l'anaylse ecoindex via l'API pour la homepage
+      # Installation de jq pour parser le JSON
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      # Lancement de l'analyse ecoindex pour la homepage
       - name: Launch analysis homepage
-        id: lauchAnalysisHomepage
+        id: launchAnalysisHomepage
         uses: fjogeleit/http-request-action@v1
         with:
           url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/'
           method: 'POST'
           data: '{"web_page": {"width": 1920, "height": 1080, "url": "https://service-public.antoineguillo.com"}, "custom_headers": {"Accept": "application/json"}}'
 
-      # Lancement de l'anaylse ecoindex via l'API pour la page de l'uf1 (demande carte nationale identité)
+      # Lancement de l'analyse ecoindex pour l'uf1
       - name: Launch analysis uf1
-        id: lauchAnalysisUf1
+        id: launchAnalysisUf1
         uses: fjogeleit/http-request-action@v1
         with:
           url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/'
           method: 'POST'
           data: '{"web_page": {"width": 1920, "height": 1080, "url": "https://service-public.antoineguillo.com/pages/carte-identite/etape-1.html"}, "custom_headers": {"Accept": "application/json"}}'
-      
-       # Lancement de l'anaylse ecoindex via l'API pour la page de l'uf2 (inscription sur les listes électorales)
+
+      # Lancement de l'analyse ecoindex pour l'uf2
       - name: Launch analysis uf2
-        id: lauchAnalysisUf2
+        id: launchAnalysisUf2
         uses: fjogeleit/http-request-action@v1
         with:
           url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/'
           method: 'POST'
           data: '{"web_page": {"width": 1920, "height": 1080, "url": "https://service-public.antoineguillo.com/pages/inscription-electorale/etape-1.html"}, "custom_headers": {"Accept": "application/json"}}'
 
-      # Délai d'attente pour laisser le temps à l'analyse de se faire
-      - name: Sleep for 5 minutes
-        run: sleep 300s
-        shell: bash
-
-      # Récupération des données de l'analyse avec l'id retournée à l'étape launchAnalysisHomepage
-      - name: Get analysis result homepage
+      # Vérification du statut de l'analyse homepage
+      - name: Poll analysis homepage
         id: getAnalysisHomepage
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/${{fromJson(steps.lauchAnalysisHomepage.outputs.response).id}}'
-          method: 'GET'
+        run: |
+          TASK_ID=$(echo '${{ steps.launchAnalysisHomepage.outputs.response }}' | jq -r '.id')
+          STATUS=""
+          MAX_ATTEMPTS=30
+          ATTEMPT=0
+          INTERVAL=10
 
-      # Récupération des données de l'analyse avec l'id retournée à l'étape launchAnalysisUf1
-      - name: Get analysis result uf1
+          while [ "$STATUS" != "completed" ] && [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+            sleep $INTERVAL
+            RESPONSE=$(curl -s "https://api.ecoindex.fr/v1/tasks/ecoindexes/$TASK_ID")
+            STATUS=$(echo "$RESPONSE" | jq -r '.status')
+            ATTEMPT=$((ATTEMPT + 1))
+            echo "Attempt $ATTEMPT: Status = $STATUS"
+          done
+
+          if [ "$STATUS" = "completed" ]; then
+            echo "response=$RESPONSE" >> $GITHUB_OUTPUT
+          else
+            echo "Timeout reached for task $TASK_ID"
+            exit 1
+          fi
+
+      # Vérification du statut de l'analyse uf1
+      - name: Poll analysis uf1
         id: getAnalysisUf1
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/${{fromJson(steps.lauchAnalysisUf1.outputs.response).id}}'
-          method: 'GET'
+        run: |
+          TASK_ID=$(echo '${{ steps.launchAnalysisUf1.outputs.response }}' | jq -r '.id')
+          STATUS=""
+          MAX_ATTEMPTS=30
+          ATTEMPT=0
+          INTERVAL=10
 
-      # Récupération des données de l'analyse avec l'id retournée à l'étape launchAnalysisHomepage
-      - name: Get analysis result uf2
+          while [ "$STATUS" != "completed" ] && [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+            sleep $INTERVAL
+            RESPONSE=$(curl -s "https://api.ecoindex.fr/v1/tasks/ecoindexes/$TASK_ID")
+            STATUS=$(echo "$RESPONSE" | jq -r '.status')
+            ATTEMPT=$((ATTEMPT + 1))
+            echo "Attempt $ATTEMPT: Status = $STATUS"
+          done
+
+          if [ "$STATUS" = "completed" ]; then
+            echo "response=$RESPONSE" >> $GITHUB_OUTPUT
+          else
+            echo "Timeout reached for task $TASK_ID"
+            exit 1
+          fi
+
+      # Vérification du statut de l'analyse uf2
+      - name: Poll analysis uf2
         id: getAnalysisUf2
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: 'https://api.ecoindex.fr/v1/tasks/ecoindexes/${{fromJson(steps.lauchAnalysisUf2.outputs.response).id}}'
-          method: 'GET'
+        run: |
+          TASK_ID=$(echo '${{ steps.launchAnalysisUf2.outputs.response }}' | jq -r '.id')
+          STATUS=""
+          MAX_ATTEMPTS=30
+          ATTEMPT=0
+          INTERVAL=10
 
-      # Récupération de la date courante pour nommage du fichier
+          while [ "$STATUS" != "completed" ] && [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+            sleep $INTERVAL
+            RESPONSE=$(curl -s "https://api.ecoindex.fr/v1/tasks/ecoindexes/$TASK_ID")
+            STATUS=$(echo "$RESPONSE" | jq -r '.status')
+            ATTEMPT=$((ATTEMPT + 1))
+            echo "Attempt $ATTEMPT: Status = $STATUS"
+          done
+
+          if [ "$STATUS" = "completed" ]; then
+            echo "response=$RESPONSE" >> $GITHUB_OUTPUT
+          else
+            echo "Timeout reached for task $TASK_ID"
+            exit 1
+          fi
+
+      # Récupération de la date courante
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
-      # Création d'un fichier pour stocker l'analyse
+      # Création du fichier de stockage
       - name: Store analysis
-        id: storeAnalysis
         uses: 1arp/create-a-file-action@0.4.6
         with:
           path: 'docs/ecoindex'
@@ -90,7 +138,6 @@ jobs:
             ${{ steps.getAnalysisUf1.outputs.response }}
             ${{ steps.getAnalysisUf2.outputs.response }}
 
-      # Commit suite à la création du fichier
+      # Commit automatique
       - name: Auto commit
         uses: stefanzweifel/git-auto-commit-action@v7
-    
