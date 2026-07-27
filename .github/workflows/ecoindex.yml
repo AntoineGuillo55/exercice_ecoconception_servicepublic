@@ -44,8 +44,8 @@ jobs:
           data: '{"web_page": {"width": 1920, "height": 1080, "url": "https://service-public.antoineguillo.com/pages/inscription-electorale/etape-1.html"}, "custom_headers": {"Accept": "application/json"}}'
 
       # Délai d'attente pour laisser le temps à l'analyse de se faire
-      - name: Sleep for 180 seconds
-        run: sleep 180s
+      - name: Sleep for 5 minutes
+        run: sleep 300s
         shell: bash
 
       # Récupération des données de l'analyse avec l'id retournée à l'étape launchAnalysisHomepage
