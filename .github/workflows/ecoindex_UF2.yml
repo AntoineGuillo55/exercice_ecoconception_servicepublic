@@ -13,7 +13,8 @@ jobs:
       # Chargement du contenu du repository
       - uses: actions/checkout@v7
         with:
-          ref: ${{ github.head_ref }}
+          ref: main
+          fetch-depth: 0
           persist-credentials: true
 
       # Lancement de l'anaylse ecoindex via l'API
@@ -53,7 +54,19 @@ jobs:
           file: uf2-ecoindex-analysis-${{steps.date.outputs.date}}-${{github.sha}}.json
           content: ${{ steps.getAnalysis.outputs.response }}
 
+      - name: Sync branch with remote 
+        run: | 
+          git config user.name "github-actions[bot]" 
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com" 
+          git fetch origin main 
+          git checkout main 
+          git pull --rebase origin main
+
       # Commit suite à la création du fichier
       - name: Auto commit
         uses: stefanzweifel/git-auto-commit-action@v7
-    
+        with: 
+          branch: main 
+          commit_message: "chore: add ecoindex analysis results" 
+          commit_user_name: github-actions 
+          commit_user_email: github-actions@users.noreply.github.com
