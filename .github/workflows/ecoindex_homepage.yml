@@ -1,4 +1,4 @@
-name: ecoindex-check homepage
+name: ecoindex-check-homepage
 run-name: ${{github.actor}} is running ecoindex check of the homepage
 on: [workflow_dispatch]
 jobs:
@@ -26,7 +26,7 @@ jobs:
           data: '{"web_page": {"width": 1920, "height": 1080, "url": "https://service-public.antoineguillo.com"}, "custom_headers": {"Accept": "application/json"}}'
 
       # Délai d'attente pour laisser le temps à l'analyse de se faire
-      - name: Sleep for 30 seconds
+      - name: Sleep for 120 seconds
         run: sleep 120s
         shell: bash
 

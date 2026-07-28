@@ -1,4 +1,4 @@
-name: ecoindex-check UF1
+name: ecoindex-check-uf2
 run-name: ${{github.actor}} is running ecoindex check of the UF2 form
 on: [workflow_dispatch]
 jobs:
@@ -26,7 +26,7 @@ jobs:
           data: '{"web_page": {"width": 1920, "height": 1080, "url": "https://service-public.antoineguillo.com/pages/inscription-electorale/etape-1.html"}, "custom_headers": {"Accept": "application/json"}}'
 
       # Délai d'attente pour laisser le temps à l'analyse de se faire
-      - name: Sleep for 30 seconds
+      - name: Sleep for 120 seconds
         run: sleep 120s
         shell: bash
 
@@ -50,7 +50,7 @@ jobs:
         with:
           path: 'docs/ecoindex'
           isAbsolutePath: 'false'
-          file: uf1-ecoindex-analysis-${{steps.date.outputs.date}}-${{github.sha}}.json
+          file: uf2-ecoindex-analysis-${{steps.date.outputs.date}}-${{github.sha}}.json
           content: ${{ steps.getAnalysis.outputs.response }}
 
       # Commit suite à la création du fichier
