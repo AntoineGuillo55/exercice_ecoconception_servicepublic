@@ -1,5 +1,4 @@
 name: ecoindex-check-homepage
-id: ecoindex-check-homepage
 run-name: ${{github.actor}} is running ecoindex check of the homepage
 on: [workflow_dispatch]
 jobs:
