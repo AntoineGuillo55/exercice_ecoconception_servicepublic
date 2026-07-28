@@ -1,4 +1,5 @@
 name: ecoindex-check-uf1
+id: ecoindex-check-uf1
 run-name: ${{github.actor}} is running ecoindex check of the UF1 form
 on: [workflow_dispatch]
 jobs:
