@@ -227,28 +227,23 @@ section{padding:56px 0;}
   padding:40px 0;
 }
 .chiffres-grid{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;text-align:center;
 }
 .chiffre{font-family:'Archivo Expanded';font-size:38px;font-weight:800;color:var(--bleu-france);}
 .chiffre-label{font-size:13.5px;color:#555;}
 
-/* Carrousel partenaires (autoplay, décoratif) */
+
 .bandeau-partenaires{
-  overflow:hidden;
-  padding:30px 0;
-  border-top:1px solid var(--gris-bordure);
+  padding:30px ;
   border-bottom:1px solid var(--gris-bordure);
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 60px;
+  justify-items: center;
 }
-.piste-logos{
-  display:flex;gap:60px;
-  width:max-content;
-  animation:defilement 22s linear infinite;
-}
-.piste-logos img{height:46px;width:auto;filter:grayscale(100%);opacity:.7;}
-@keyframes defilement{
-  from{transform:translateX(0);}
-  to{transform:translateX(-50%);}
-}
+
+.bandeau-partenaires img{height:46px;width:auto;filter:grayscale(100%);opacity:.7;}
+
 
 /* Footer */
 footer.site-footer{
@@ -426,20 +421,27 @@ footer.site-footer{
 .mascotte-flottante{
   position:fixed;bottom:24px;right:24px;
   width:90px;z-index:50;
-  animation:flotte 3.4s ease-in-out infinite;
   filter:drop-shadow(0 8px 18px rgba(0,0,0,.25));
 }
-@keyframes flotte{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-14px);}
+
+@media (max-width:440px){
+  .bandeau-partenaires { grid-template-columns: repeat(2, 1fr);}
+  .chiffres-grid{grid-template-columns: 1fr;}
 }
 
-@media (max-width:880px){
+@media (max-width:630px) {
+  .bloc-actus{grid-template-columns: 1fr;}
+}
+
+@media (min-width: 631px) and (max-width:880px){
+    .bloc-actus{grid-template-columns: repeat(2, 1fr);}
+}
+
+@media (min-width: 441px) and (max-width:880px){
   .hero-inner{grid-template-columns:1fr;}
-  .bloc-actus{grid-template-columns:1fr;}
-  .chiffres-grid{grid-template-columns:repeat(2,1fr);}
+  .bandeau-partenaires { grid-template-columns: repeat(3,1fr);}
+  .chiffres-grid{grid-template-columns:repeat(3,1fr);}
   .footer-grid{grid-template-columns:repeat(2,1fr);}
   .ligne-deux{grid-template-columns:1fr;}
-  .galerie-exemples{grid-template-columns:1fr;}
   .mascotte-flottante{width:60px;}
 }

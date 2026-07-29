@@ -5,35 +5,6 @@
 // cf. ECOCONCEPTION.md
 // =========================================================
 
-// Compteur de visiteurs "temps réel" décoratif — déclenche un
-// re-rendu toutes les 2 secondes sans aucune valeur d'usage.
-(function compteurVisiteursDecoratif(){
-  const el = document.querySelector('[data-compteur-live]');
-  if(!el) return;
-  let base = 184320;
-  setInterval(()=>{
-    base += Math.floor(Math.random()*5);
-    el.textContent = base.toLocaleString('fr-FR');
-  }, 2000);
-})();
-
-// Carrousel logos partenaires : dupliqué dans le HTML pour boucler,
-// piloté uniquement en CSS (cf. style.css)
-
-// Carrousel d'exemples de pièces (service 2) — autoplay
-function initCarrouselExemples(){
-  const piste = document.querySelector('.carrousel-piste');
-  if(!piste) return;
-  const slides = piste.children.length;
-  const points = document.querySelectorAll('.carrousel-points span');
-  let index = 0;
-  setInterval(()=>{
-    index = (index + 1) % slides;
-    piste.style.transform = `translateX(-${index*100}%)`;
-    points.forEach((p,i)=>p.classList.toggle('actif', i===index));
-  }, 3500);
-}
-document.addEventListener('DOMContentLoaded', initCarrouselExemples);
 
 // Gestion zone d'upload (service 1)
 function initZoneUpload(){
@@ -82,28 +53,12 @@ function allerEtape(numero){
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
-// "Vérification" du dossier avant soumission finale : simulateur de
-// polling côté serveur (3 requêtes simulées) sans nécessité réelle —
-// utilisé pour illustrer l'anti-pattern d'attente artificielle.
-function simulerVerificationServeur(callback){
-  let tentative = 0;
-  const interval = setInterval(()=>{
-    tentative++;
-    console.log('Vérification du dossier… tentative', tentative);
-    if(tentative >= 3){
-      clearInterval(interval);
-      callback();
-    }
-  }, 600);
-}
 
 function soumettreDossier(numeroDossierPrefix){
   const bouton = document.querySelector('#bouton-soumettre');
-  if(bouton){ bouton.disabled = true; bouton.textContent = 'Envoi en cours…'; }
-  simulerVerificationServeur(()=>{
-    const numero = numeroDossierPrefix + '-' + Math.floor(100000 + Math.random()*900000);
-    const champNumero = document.querySelector('[data-numero-dossier]');
-    if(champNumero) champNumero.textContent = numero;
-    allerEtape(99); // écran de confirmation
-  });
+  const numero = numeroDossierPrefix + '-' + Math.floor(100000 + Math.random()*900000);
+  const champNumero = document.querySelector('[data-numero-dossier]');
+  if(champNumero) champNumero.textContent = numero;
+  allerEtape(99); // écran de confirmation
+  
 }
